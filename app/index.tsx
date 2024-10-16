@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Text, View, Button, StyleSheet } from "react-native";
-import { AuthProvider, useAuth } from "./authContext";
+import { AuthProvider, useAuth} from "./authContext";
 
 export default function Index() {
   const [username, setUsername] = useState<string>('');
