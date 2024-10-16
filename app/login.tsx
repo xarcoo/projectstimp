@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Card, Text }  from "@rneui/base";
 import { TextInput } from 'react-native-gesture-handler';
 import { StyleSheet, View } from 'react-native';
-import { AuthProvider, useAuth } from './authContext';
+import { AuthProvider, useAuth } from './screens/authContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Login () {
@@ -28,7 +28,6 @@ function Login () {
     const { login } = useAuth(); // Access login function from context
     const [username, setUsername] = React.useState(''); // State for username
     const [password, setPassword] = React.useState(''); // State for password
-
 
     const doLogin = async () => {
         if (password === '1234') {

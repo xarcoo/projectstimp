@@ -45,6 +45,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
+      <Button title="START" onPress={() => router.push('./game')}></Button>
       <Button title="LOG OUT" onPress={()=>doLogout()}></Button>
     </View>
   );

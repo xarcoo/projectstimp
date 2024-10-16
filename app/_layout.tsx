@@ -1,23 +1,23 @@
 import { Stack, useRouter } from "expo-router";
-import { AuthProvider, useAuth } from "./authContext";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { AuthProvider, useAuth } from "./screens/authContext";
 
 function RootLayout() {
   const { isLoggedIn } = useAuth(); // Get logged-in status
   const router = useRouter();
+
   useEffect(() => {
-  // Redirect based on login status
-  if (!isLoggedIn) {
-  // If not logged in, redirect to login screen
-  router.replace("/login");
-  } else {
-  // If logged in, redirect to index
-  router.replace("/");
-  }
+      if (!isLoggedIn) {
+          router.replace("./login");
+      } else {
+          router.replace("/screens/");
+      }
   }, [isLoggedIn]);
+  
   return (
     <Stack>
-      <Stack.Screen name="index" />
+      <Stack.Screen name="screens" options={{ headerShown: false }} />
+      <Stack.Screen name="./game" options={{ title: "Game" }}/>
     </Stack>
   );
 }
