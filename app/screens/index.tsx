@@ -45,6 +45,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
+      <Text>{username}</Text>
       <Button title="START" onPress={() => router.push('../grid')}></Button>
       <Button title="LOG OUT" onPress={()=>doLogout()}></Button>
     </View>
