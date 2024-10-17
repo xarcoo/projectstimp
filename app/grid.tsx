@@ -15,9 +15,10 @@ interface GridProps {
   columns: number;
   highlightedKotak: number[];
   onLevelComplete: () => void;
+  onGameOver: () => void; // New prop to handle game over when pressing wrong box
 }
 
-const Grid: React.FC<GridProps> = ({ rows, columns, highlightedKotak, onLevelComplete }) => {
+const Grid: React.FC<GridProps> = ({ rows, columns, highlightedKotak, onLevelComplete, onGameOver }) => {
   const [activeKotak, setActiveKotak] = useState<number[]>([]);
   const [incorrectKotak, setIncorrectKotak] = useState<number[]>([]);
 
@@ -30,7 +31,7 @@ const Grid: React.FC<GridProps> = ({ rows, columns, highlightedKotak, onLevelCom
     const timer = setTimeout(() => {
       setActiveKotak([]);
       setIncorrectKotak([]);
-    }, 3000);
+    }, 3000); // 3 seconds delay to hide pattern
 
     // Cleanup timer on component unmount or when effect is rerun
     return () => clearTimeout(timer);
@@ -45,8 +46,9 @@ const Grid: React.FC<GridProps> = ({ rows, columns, highlightedKotak, onLevelCom
         onLevelComplete();
       }
     } else {
-      // Otherwise, add to incorrect kotak to turn it red
+      // If an incorrect box is clicked, end the game immediately
       setIncorrectKotak((prevKotak) => [...prevKotak, index]);
+      onGameOver();
     }
   };
 
@@ -89,14 +91,29 @@ const App: React.FC = () => {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [score, setScore] = useState(0);
   const [highlightedKotak, setHighlightedKotak] = useState<number[]>([]);
+  const [timeLeft, setTimeLeft] = useState(30); // 30 seconds timer
+  const [gameOver, setGameOver] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false); // Timer control
 
   useEffect(() => {
     if (currentLevel < LEVELS.length) {
-      // Dynamically increase the number of patterns (highlighted boxes) per level: 3 + currentLevel
       const randomIndexes = generateRandomIndexes(LEVELS[currentLevel].rows * LEVELS[currentLevel].columns, 3 + currentLevel);
       setHighlightedKotak(randomIndexes);
+      setTimeLeft(30); // Reset timer for each level
+      setTimerStarted(false); // Timer should not start until pattern is displayed
     }
   }, [currentLevel]);
+
+  useEffect(() => {
+    if (timerStarted && timeLeft > 0 && !gameOver) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); // Countdown timer
+      return () => clearTimeout(timer); // Cleanup timer
+    }
+
+    if (timeLeft === 0) {
+      setGameOver(true); // End game if time runs out
+    }
+  }, [timeLeft, timerStarted, gameOver]);
 
   const generateRandomIndexes = (max: number, count: number) => {
     const indexes = new Set<number>();
@@ -108,21 +125,48 @@ const App: React.FC = () => {
 
   const handleLevelComplete = () => {
     setScore((prevScore) => prevScore + 20); // Add score
-    setCurrentLevel((prevLevel) => prevLevel + 1); // Move to next level
+    if (currentLevel < LEVELS.length - 1) {
+      setCurrentLevel((prevLevel) => prevLevel + 1); // Move to next level
+    } else {
+      setGameOver(true); // End game if all levels are completed
+    }
   };
+
+  const handleGameOver = () => {
+    setGameOver(true); // Set gameOver to true when wrong box is pressed
+  };
+
+  const handleShowResult = () => {
+    setGameOver(true); // End game when user clicks "Hasil"
+  };
+
+  // Start timer only after the pattern is hidden (after 3 seconds)
+  useEffect(() => {
+    const patternTimer = setTimeout(() => {
+      setTimerStarted(true); // Start the timer after pattern display
+    }, 3000); // 3-second delay before timer starts
+    return () => clearTimeout(patternTimer);
+  }, [highlightedKotak]);
 
   return (
     <View style={styles.appContainer}>
-      <Text style={styles.scoreText}>Score: {score}</Text>
-      {currentLevel < LEVELS.length ? (
-        <Grid
-          rows={LEVELS[currentLevel].rows}
-          columns={LEVELS[currentLevel].columns}
-          highlightedKotak={highlightedKotak}
-          onLevelComplete={handleLevelComplete}
-        />
+      {gameOver ? (
+        <>
+          <Text style={styles.finalText}>Game Over! Your final score is {score}</Text>
+          <Button title="Hasil" onPress={handleShowResult} style={styles.resultButton} />
+        </>
       ) : (
-        <Text style={styles.finalText}>Game Over! Your final score is {score}</Text>
+        <>
+          <Text style={styles.scoreText}>Score: {score}</Text>
+          {timerStarted && <Text style={styles.timerText}>Time Left: {timeLeft} seconds</Text>}
+          <Grid
+            rows={LEVELS[currentLevel].rows}
+            columns={LEVELS[currentLevel].columns}
+            highlightedKotak={highlightedKotak}
+            onLevelComplete={handleLevelComplete}
+            onGameOver={handleGameOver} // Pass game over handler
+          />
+        </>
       )}
     </View>
   );
@@ -138,6 +182,10 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 24,
     marginBottom: 20,
+  },
+  timerText: {
+    fontSize: 18,
+    marginBottom: 10,
   },
   finalText: {
     fontSize: 24,
@@ -166,6 +214,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
+  },
+  resultButton: {
+    marginTop: 20,
   },
 });
 
