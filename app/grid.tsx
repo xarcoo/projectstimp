@@ -91,27 +91,27 @@ const App: React.FC = () => {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [score, setScore] = useState(0);
   const [highlightedKotak, setHighlightedKotak] = useState<number[]>([]);
-  const [timeLeft, setTimeLeft] = useState(30); // 30 seconds timer
+  const [timeLeft, setTimeLeft] = useState(30);
   const [gameOver, setGameOver] = useState(false);
-  const [timerStarted, setTimerStarted] = useState(false); // Timer control
+  const [timerStarted, setTimerStarted] = useState(false);
 
   useEffect(() => {
     if (currentLevel < LEVELS.length) {
       const randomIndexes = generateRandomIndexes(LEVELS[currentLevel].rows * LEVELS[currentLevel].columns, 3 + currentLevel);
       setHighlightedKotak(randomIndexes);
-      setTimeLeft(30); // Reset timer for each level
-      setTimerStarted(false); // Timer should not start until pattern is displayed
+      setTimeLeft(30);
+      setTimerStarted(false);
     }
   }, [currentLevel]);
 
   useEffect(() => {
     if (timerStarted && timeLeft > 0 && !gameOver) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); // Countdown timer
-      return () => clearTimeout(timer); // Cleanup timer
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
     }
 
     if (timeLeft === 0) {
-      setGameOver(true); // End game if time runs out
+      setGameOver(true);
     }
   }, [timeLeft, timerStarted, gameOver]);
 
@@ -124,27 +124,26 @@ const App: React.FC = () => {
   };
 
   const handleLevelComplete = () => {
-    setScore((prevScore) => prevScore + 20); // Add score
+    setScore((prevScore) => prevScore + 20);
     if (currentLevel < LEVELS.length - 1) {
-      setCurrentLevel((prevLevel) => prevLevel + 1); // Move to next level
+      setCurrentLevel((prevLevel) => prevLevel + 1); 
     } else {
-      setGameOver(true); // End game if all levels are completed
+      setGameOver(true); 
     }
   };
 
   const handleGameOver = () => {
-    setGameOver(true); // Set gameOver to true when wrong box is pressed
+    setGameOver(true);
   };
 
   const handleShowResult = () => {
-    setGameOver(true); // End game when user clicks "Hasil"
+    setGameOver(true);
   };
 
-  // Start timer only after the pattern is hidden (after 3 seconds)
   useEffect(() => {
     const patternTimer = setTimeout(() => {
-      setTimerStarted(true); // Start the timer after pattern display
-    }, 3000); // 3-second delay before timer starts
+      setTimerStarted(true);
+    }, 3000);
     return () => clearTimeout(patternTimer);
   }, [highlightedKotak]);
 
@@ -164,7 +163,7 @@ const App: React.FC = () => {
             columns={LEVELS[currentLevel].columns}
             highlightedKotak={highlightedKotak}
             onLevelComplete={handleLevelComplete}
-            onGameOver={handleGameOver} // Pass game over handler
+            onGameOver={handleGameOver}
           />
         </>
       )}

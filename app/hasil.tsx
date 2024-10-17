@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, Text } from "@rneui/base";
 import { router } from "expo-router";
-import { Component, ReactNode } from "react";
+import { Component } from "react";
 import { View } from "react-native";
 
 export default class Game extends Component {
@@ -37,16 +37,34 @@ export default class Game extends Component {
     };
 
     setHighscore = async () => {
-        try {
-          //belum dibuat
-        } catch (e) {
-          console.error('Error setting highscore to AsyncStorage', e);
+      const { highscore, score } = this.state;
+
+      const updatedScores = [...highscore, score].sort((a, b) => b - a).slice(0, 3);
+  
+      try {
+        await AsyncStorage.setItem('highscore', JSON.stringify(updatedScores));
+        this.setState({ highScores: updatedScores });
+      } catch (error) {
+        console.error('Error saving high scores:', error);
+      }
+    };
+
+    getHighscore = async () => {
+      try {
+        const scores = await AsyncStorage.getItem('highscore');
+        if (scores) {
+          this.setState({ highScore: JSON.parse(scores) });
         }
+      } catch (error) {
+        console.error('Error loading high scores:', error);
+      }
     };
 
     componentDidMount(): void {
         this.cekStorage()
-    }
+        this.getHighscore()
+        this.setHighscore()
+    };
 
     render() {
         return (
