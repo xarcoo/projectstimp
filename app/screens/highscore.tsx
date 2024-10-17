@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text } from "@rneui/base";
+import { Button, Text } from "@rneui/base";
 import { Component, ReactNode } from "react";
 import { FlatList, View } from "react-native";
 
@@ -11,25 +11,36 @@ export default class Highscore extends Component {
     getHighscore = async () => {
         try {
           const scores = await AsyncStorage.getItem('highscore');
-          if (scores) {
-            this.setState({ highScore: JSON.parse(scores) });
+          if (scores !== null) {
+            this.setState({ highscore: JSON.parse(scores) });
           }
         } catch (error) {
           console.error('Error loading high scores:', error);
         }
-      };
+    };
+
+    componentDidMount(): void {
+        this.getHighscore()
+    }
 
     render() {
         return (
             <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                <Text>High Scores:</Text>
-                <FlatList
-                data={this.state.highscore}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => (
-                    <Text>{`${index + 1}. ${item}`}</Text>
-                )}
-                />
+                <Text>Highscore(s):</Text>
+                {/* <FlatList
+                    data={this.state.highscore}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => (
+                        <Text>
+                            {index + 1}. {item['username']} - {item['score']}
+                        </Text>
+                    )}
+                /> */}
+                {this.state.highscore.map((item, index) => (
+                    <View key={index}>
+                        <Text>{index + 1}. {item[0]}: {item[1]}</Text>
+                    </View>
+                ))}
             </View>
         )
     }

@@ -18,6 +18,7 @@ function RootLayout() {
     <Stack>
       <Stack.Screen name="screens" options={{ headerShown: false }} />
       <Stack.Screen name="./grid" options={{ title: "Game" }}/>
+      <Stack.Screen name="./hasil" options={{ title: "Hasil" }}/>
     </Stack>
   );
 }

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Button } from '@rneui/themed';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 const LEVELS = [
   { rows: 3, columns: 3 }, // Level 1
@@ -111,6 +114,7 @@ const App: React.FC = () => {
     }
 
     if (timeLeft === 0) {
+      setScoreLocal()
       setGameOver(true);
     }
   }, [timeLeft, timerStarted, gameOver]);
@@ -123,20 +127,32 @@ const App: React.FC = () => {
     return Array.from(indexes);
   };
 
+  const setScoreLocal = async () => {
+    try {
+      await AsyncStorage.setItem('score', score.toString());
+    } catch (error) {
+      console.error('Error saving score:', error);
+    }
+  };
+
   const handleLevelComplete = () => {
     setScore((prevScore) => prevScore + 20);
+
     if (currentLevel < LEVELS.length - 1) {
       setCurrentLevel((prevLevel) => prevLevel + 1); 
     } else {
+      setScoreLocal()
       setGameOver(true); 
     }
   };
 
   const handleGameOver = () => {
+    setScoreLocal()
     setGameOver(true);
   };
 
   const handleShowResult = () => {
+    setScoreLocal()
     setGameOver(true);
   };
 
@@ -152,7 +168,7 @@ const App: React.FC = () => {
       {gameOver ? (
         <>
           <Text style={styles.finalText}>Game Over! Your final score is {score}</Text>
-          <Button title="Hasil" onPress={handleShowResult} style={styles.resultButton} />
+          <Button title="Hasil" onPress={() => router.push('./hasil')} style={styles.resultButton} />
         </>
       ) : (
         <>
