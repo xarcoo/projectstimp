@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button, Text } from "@rneui/base";
-import { Component, ReactNode } from "react";
-import { FlatList, View } from "react-native";
+import { Text } from "@rneui/base";
+import { Component } from "react";
+import { View } from "react-native";
+import Animated, { SlideInDown, SlideInLeft, SlideInRight, SlideOutDown } from "react-native-reanimated";
 
 export default class Highscore extends Component {
   state = {
@@ -26,10 +27,10 @@ export default class Highscore extends Component {
   render() {
     return (
       <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-        <Text>Highscore(s):</Text>
+        <Animated.Text style={{fontSize: 30 }} entering={SlideInLeft.duration(1000)}>Highscore(s):</Animated.Text>
         {this.state.highscore.map((item, index) => (
             <View key={index}>
-                <Text>{index + 1}. {item[0]}: {item[1]}</Text>
+                <Animated.Text style={{fontSize: 20 }} entering={SlideInRight.duration(1000)}>{index + 1}. {item[0]}: {item[1]}</Animated.Text>
             </View>
         ))}
       </View>

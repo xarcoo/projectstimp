@@ -114,8 +114,8 @@ const App: React.FC = () => {
     }
 
     if (timeLeft === 0) {
-      setScoreLocal()
       setGameOver(true);
+      setScoreLocal()
     }
   }, [timeLeft, timerStarted, gameOver]);
 
@@ -141,19 +141,14 @@ const App: React.FC = () => {
     if (currentLevel < LEVELS.length - 1) {
       setCurrentLevel((prevLevel) => prevLevel + 1); 
     } else {
-      setScoreLocal()
-      setGameOver(true); 
+      setGameOver(true);
+      setScoreLocal() 
     }
   };
 
   const handleGameOver = () => {
-    setScoreLocal()
     setGameOver(true);
-  };
-
-  const handleShowResult = () => {
     setScoreLocal()
-    setGameOver(true);
   };
 
   useEffect(() => {
