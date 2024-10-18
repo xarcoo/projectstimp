@@ -28,15 +28,6 @@ export default function Index() {
     cekLogin()
   }, [username]);
 
-  const doLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('username')
-      alert('logged out');
-      logout();
-    } catch (e) {
-    } 
-  }
-
   return (
     <View
       style={{
@@ -45,9 +36,8 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>{username}</Text>
-      <Button title="START" onPress={() => router.push('../grid')}></Button>
-      <Button title="LOG OUT" onPress={()=>doLogout()}></Button>
+      <Text style={{textAlign:'center', width: 500, fontSize: 30 }}>Akan terdapat 5 level yang akan mengharuskan player untuk mengingat posisi-posisi persegi yang diberi warna hijau, setelah beberapa detik akan berubah menjadi warna abu-abu.</Text>
+      <Button title="PLAY GAME" onPress={() => router.push('../grid')}></Button>
     </View>
   );
 }
