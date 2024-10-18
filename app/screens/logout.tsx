@@ -17,7 +17,7 @@ export default function Logout() {
       await AsyncStorage.removeItem('username');
       alert('Logged out successfully');
       logout();
-      router.replace('/login');
+      router.replace('./login');
     } catch (e) {
     }
   };
