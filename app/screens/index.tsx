@@ -36,7 +36,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text style={{textAlign:'center', width: 500, fontSize: 30 }}>Akan terdapat 5 level yang akan mengharuskan player untuk mengingat posisi-posisi persegi yang diberi warna hijau, setelah beberapa detik akan berubah menjadi warna abu-abu.</Text>
+      <Text style={{textAlign:'center', width: 200, fontSize: 14, marginBottom: 20 }}>Akan terdapat 5 level yang akan mengharuskan player untuk mengingat posisi-posisi persegi yang diberi warna hijau, setelah beberapa detik akan berubah menjadi warna abu-abu.</Text>
       <Button title="PLAY GAME" onPress={() => router.push('../grid')}></Button>
     </View>
   );

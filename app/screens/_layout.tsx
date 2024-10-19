@@ -30,9 +30,9 @@ function DrawerLayout() {
 
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={Index} options={{ drawerLabel: "Home", title: username }} />
-      <Drawer.Screen name="Highscore" component={Highscore} options={{ drawerLabel: "Highscore" }} />
-      <Drawer.Screen name="Log Out" component={Logout} options={{ drawerLabel: 'Log Out' }} />
+      <Drawer.Screen name="home" component={Index} options={{ drawerLabel: "Home", title: username }} />
+      <Drawer.Screen name="highscore" component={Highscore} options={{ drawerLabel: "Highscore", title: "Highscore" }} />
+      <Drawer.Screen name="logout" component={Logout} options={{ drawerLabel: 'Log Out' , title: "Logout"}} />
     </Drawer.Navigator>
   );
 }

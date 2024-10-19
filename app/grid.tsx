@@ -2,61 +2,60 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Button } from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 
-const LEVELS = [
-  { rows: 3, columns: 3 }, // Level 1
-  { rows: 4, columns: 3 }, // Level 2
-  { rows: 5, columns: 3 }, // Level 3
-  { rows: 6, columns: 3 }, // Level 4
-  { rows: 7, columns: 3 }, // Level 5
+const levels = [
+  { rows: 3, columns: 3 },
+  { rows: 4, columns: 3 },
+  { rows: 5, columns: 3 },
+  { rows: 6, columns: 3 },
+  { rows: 7, columns: 3 },
 ];
+
+let totalScore = 0;
 
 interface GridProps {
   rows: number;
   columns: number;
   highlightedKotak: number[];
   onLevelComplete: () => void;
-  onGameOver: () => void; // New prop to handle game over when pressing wrong box
+  onGameOver: () => void;
+  canPress: boolean;
 }
 
-const Grid: React.FC<GridProps> = ({ rows, columns, highlightedKotak, onLevelComplete, onGameOver }) => {
+const Grid: React.FC<GridProps> = ({ rows, columns, highlightedKotak, onLevelComplete, onGameOver, canPress }) => {
   const [activeKotak, setActiveKotak] = useState<number[]>([]);
   const [incorrectKotak, setIncorrectKotak] = useState<number[]>([]);
 
   useEffect(() => {
-    // Set the provided highlighted kotak as active
     setActiveKotak(highlightedKotak);
-    setIncorrectKotak([]); // Reset incorrect kotak
+    setIncorrectKotak([]);
 
-    // Change color back after 3 seconds
     const timer = setTimeout(() => {
       setActiveKotak([]);
       setIncorrectKotak([]);
-    }, 3000); // 3 seconds delay to hide pattern
+    }, 3000);
 
-    // Cleanup timer on component unmount or when effect is rerun
     return () => clearTimeout(timer);
   }, [highlightedKotak]);
 
   const handleBoxPress = (index: number) => {
+    if (!canPress || activeKotak.includes(index)) return;
+
     if (highlightedKotak.includes(index)) {
-      // If clicked box is supposed to be highlighted, add it to active kotak
       setActiveKotak((prevKotak) => [...prevKotak, index]);
-      // Check if all correct boxes are clicked to complete level
+
       if (activeKotak.length + 1 === highlightedKotak.length) {
         onLevelComplete();
       }
     } else {
-      // If an incorrect box is clicked, end the game immediately
       setIncorrectKotak((prevKotak) => [...prevKotak, index]);
       onGameOver();
     }
   };
 
-  const containerWidth = columns * 60; // Dynamically adjust container width
-  const containerHeight = rows * 60; // Dynamically adjust container height
+  const containerWidth = columns * 60;
+  const containerHeight = rows * 60;
 
   return (
     <View style={[styles.container, { width: containerWidth, height: containerHeight }]}>
@@ -69,20 +68,15 @@ const Grid: React.FC<GridProps> = ({ rows, columns, highlightedKotak, onLevelCom
               width: containerWidth / columns - 10,
               height: containerHeight / rows - 10,
               backgroundColor: activeKotak.includes(index)
-                ? 'green' // Green if it's part of activeKotak
+                ? 'green'
                 : incorrectKotak.includes(index)
-                ? 'red' // Red if it's an incorrect selection
-                : 'gray', // Default color
+                  ? 'red'
+                  : 'gray',
             },
           ]}
         >
           <View style={styles.buttonContainer}>
-            <Button
-              size="lg"
-              title=""
-              onPress={() => handleBoxPress(index)}
-              color="transparent"
-            />
+            <Button size="lg" title="" onPress={() => handleBoxPress(index)} color="transparent" />
           </View>
         </View>
       ))}
@@ -97,13 +91,15 @@ const App: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(30);
   const [gameOver, setGameOver] = useState(false);
   const [timerStarted, setTimerStarted] = useState(false);
+  const [canPress, setCanPress] = useState(false);
 
   useEffect(() => {
-    if (currentLevel < LEVELS.length) {
-      const randomIndexes = generateRandomIndexes(LEVELS[currentLevel].rows * LEVELS[currentLevel].columns, 3 + currentLevel);
+    if (currentLevel < levels.length) {
+      const randomIndexes = generateRandomIndexes(levels[currentLevel].rows * levels[currentLevel].columns, 3 + currentLevel);
       setHighlightedKotak(randomIndexes);
       setTimeLeft(30);
       setTimerStarted(false);
+      setCanPress(false);
     }
   }, [currentLevel]);
 
@@ -115,7 +111,8 @@ const App: React.FC = () => {
 
     if (timeLeft === 0) {
       setGameOver(true);
-      setScoreLocal()
+      setScoreLocal();
+      navigateToResults();
     }
   }, [timeLeft, timerStarted, gameOver]);
 
@@ -129,54 +126,82 @@ const App: React.FC = () => {
 
   const setScoreLocal = async () => {
     try {
-      await AsyncStorage.setItem('score', score.toString());
+      await AsyncStorage.setItem('score', totalScore.toString());
     } catch (error) {
       console.error('Error saving score:', error);
     }
   };
 
-  const handleLevelComplete = () => {
-    setScore((prevScore) => prevScore + 20);
+  const handleLevelComplete = async () => {
+    if (currentLevel === 0) {
+      totalScore = 0;
+    }
+    if (currentLevel < levels.length - 1) {
+      setCurrentLevel((prevLevel) => {
+        const newLevel = prevLevel + 1;
 
-    if (currentLevel < LEVELS.length - 1) {
-      setCurrentLevel((prevLevel) => prevLevel + 1); 
+        if (newLevel === levels.length) {
+          setScore(100);
+        } else {
+          setScore((prevScore) => prevScore + 20);
+        }
+        return newLevel;
+      });
     } else {
       setGameOver(true);
-      setScoreLocal() 
+      setScore(100);
+      await setScoreLocal();
+      navigateToResults();
     }
+
+    console.log("HandleLvl" + currentLevel);
+
+    totalScore += 20;
+    await setScoreLocal();
+
+    console.log("HandleLevelComplete" + score);
+    console.log("HandleLevelComplete TOTAL: " + totalScore);
   };
 
-  const handleGameOver = () => {
+  const handleGameOver = async () => {
     setGameOver(true);
-    setScoreLocal()
+    await setScoreLocal();
+    navigateToResults();
+  };
+
+  const navigateToResults = async () => {
+    await setScoreLocal();
+    console.log("NavigateLvl" + currentLevel);
+    console.log("Navigate" + score);
+    router.replace({ pathname: '/hasil', params: { totalScore } });
   };
 
   useEffect(() => {
     const patternTimer = setTimeout(() => {
       setTimerStarted(true);
+      setCanPress(true);
     }, 3000);
     return () => clearTimeout(patternTimer);
   }, [highlightedKotak]);
 
   return (
     <View style={styles.appContainer}>
-      {gameOver ? (
-        <>
-          <Text style={styles.finalText}>Game Over! Your final score is {score}</Text>
-          <Button title="Hasil" onPress={() => router.push('./hasil')} style={styles.resultButton} />
-        </>
-      ) : (
+      {!gameOver ? (
         <>
           <Text style={styles.scoreText}>Score: {score}</Text>
+          <Text style={styles.levelText}>Level: {currentLevel + 1}</Text>
           {timerStarted && <Text style={styles.timerText}>Time Left: {timeLeft} seconds</Text>}
           <Grid
-            rows={LEVELS[currentLevel].rows}
-            columns={LEVELS[currentLevel].columns}
+            rows={levels[currentLevel].rows}
+            columns={levels[currentLevel].columns}
             highlightedKotak={highlightedKotak}
             onLevelComplete={handleLevelComplete}
             onGameOver={handleGameOver}
+            canPress={canPress}
           />
         </>
+      ) : (
+        <Text style={styles.finalText}>Final Score: {score}</Text>
       )}
     </View>
   );
@@ -190,6 +215,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
   },
   scoreText: {
+    fontSize: 24,
+    marginBottom: 10,
+  },
+  levelText: {
     fontSize: 24,
     marginBottom: 20,
   },
@@ -224,9 +253,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-  },
-  resultButton: {
-    marginTop: 20,
   },
 });
 

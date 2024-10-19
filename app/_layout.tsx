@@ -7,18 +7,29 @@ function RootLayout() {
   const router = useRouter();
 
   useEffect(() => {
-      if (!isLoggedIn) {
-          router.replace("./login");
-      } else {
-          router.replace("/screens/");
-      }
+    if (!isLoggedIn) {
+      router.replace("./login");
+    } else {
+      router.replace("/screens/");
+    }
   }, [isLoggedIn]);
-  
+
   return (
     <Stack>
+      <Stack.Screen
+        name="login"
+        options={{
+          title: "Login Kuy",
+          headerBackVisible: false
+        }}
+      />
       <Stack.Screen name="screens" options={{ headerShown: false }} />
-      <Stack.Screen name="./grid" options={{ title: "Game" }}/>
-      <Stack.Screen name="./hasil" options={{ title: "Hasil" }}/>
+      <Stack.Screen name="grid" options={{ title: "Game" }} />
+      <Stack.Screen name="hasil" options={{
+        title: 'Hasil',
+        headerShown: false
+      }}
+      />
     </Stack>
   );
 }
