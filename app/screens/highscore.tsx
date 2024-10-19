@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "@rneui/base";
 import { Component } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import Animated, { SlideInLeft, SlideInRight } from "react-native-reanimated";
+import Animated, { SlideInDown, SlideInLeft, SlideInRight, SlideInUp } from "react-native-reanimated";
 
 export default class Highscore extends Component {
   state = {
@@ -33,23 +33,21 @@ export default class Highscore extends Component {
 
     return (
       <View style={styles.container}>
-        <Animated.Text style={styles.title} entering={SlideInLeft.duration(1000)}>
+        <Animated.Text style={styles.title} entering={SlideInUp.duration(1000)}>
           Highscore(s):
         </Animated.Text>
         {this.state.highscore.map((item, index) => (
-          <View key={index} style={styles.card}>
-            <Image 
+          <Animated.View key={index} style={styles.card} entering={SlideInDown.duration(1000)}>
+            <Animated.Image 
               source={images[index]} 
               style={styles.image} 
+              entering={SlideInLeft.duration(1000)}
               resizeMode="contain" 
             />
-            {/* <Animated.Text style={styles.score} entering={SlideInRight.duration(1000)}>
-              {index + 1}. {item[0]}: {item[1]}
-            </Animated.Text> */}
             <Animated.Text style={styles.score} entering={SlideInRight.duration(1000)}>
               {item[0]}: {item[1]}
             </Animated.Text>
-          </View>
+          </Animated.View>
         ))}
       </View>
     );
@@ -62,20 +60,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 16,
-    backgroundColor: "#f0f0f0", // Light background color
+    backgroundColor: "#f0f0f0",
   },
   title: {
     fontSize: 30,
     marginBottom: 20,
+    fontWeight: 'bold',
   },
   card: {
-    flexDirection: 'row', // Align items horizontally
-    alignItems: 'center', // Center vertically
-    width: '90%', // Card width
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '70%',
     padding: 16,
     marginVertical: 8,
     borderRadius: 10,
-    backgroundColor: "#fff", // Card background color
+    backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 3, // For Android shadow
+    elevation: 3,
   },
   image: {
-    width: 40, // Adjust size as needed
-    height: 40, // Adjust size as needed
-    marginRight: 16, // Space between image and text
+    width: 40,
+    height: 40,
+    marginRight: 16,
   },
   score: {
     fontSize: 20,

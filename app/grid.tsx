@@ -174,6 +174,7 @@ const App: React.FC = () => {
     console.log("NavigateLvl" + currentLevel);
     console.log("Navigate" + score);
     router.replace({ pathname: '/hasil', params: { totalScore } });
+    totalScore = 0
   };
 
   useEffect(() => {

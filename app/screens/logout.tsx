@@ -6,7 +6,6 @@ import { AuthProvider, useAuth } from "./authContext";
 
 export default function Logout() {
   const { logout } = useAuth();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     doLogout();
@@ -14,6 +13,7 @@ export default function Logout() {
 
   const doLogout = async () => {
     try {
+      await AsyncStorage.removeItem('username');
       await AsyncStorage.removeItem('username');
       alert('Logged out successfully');
       logout();

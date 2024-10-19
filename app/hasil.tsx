@@ -67,26 +67,25 @@ export default class Hasil extends Component {
           <Button 
             title="Play Again" 
             onPress={() => router.replace('/grid')}
+            titleStyle={{ fontWeight: 'bold' }} 
+            buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 3, }} 
             containerStyle={styles.button}
           />
           <Button 
             title="High Scores" 
             onPress={() => router.replace('/screens/highscore')}
+            titleStyle={{ fontWeight: 'bold' }} 
+            buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 3, }} 
             containerStyle={styles.button}
           />
           <Button 
             title="Main Menu" 
             onPress={() => router.replace('/screens')}
+            titleStyle={{ fontWeight: 'bold' }} 
+            buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 3, }} 
             containerStyle={styles.button}
           />
         </View>
-
-        {/* {this.state.highscore.length > 0 && (
-          <View style={styles.highscoreContainer}>
-            <Text style={styles.highscoreTitle}>High Scores:</Text>
-            {this.renderHighScores()}
-          </View>
-        )} */}
       </View>
     );
   }

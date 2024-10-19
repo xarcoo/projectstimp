@@ -26,7 +26,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const checkLogin = async () => {
-      const token = await AsyncStorage.getItem("userToken");
+      const token = await AsyncStorage.getItem("token");
       setIsLoggedIn(!!token);
     };
 
@@ -34,12 +34,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [isLoggedIn]);
 
   const login = async () => {
-    await AsyncStorage.setItem("userToken", "dummy-token");
+    await AsyncStorage.setItem("token", "projectstimp");
     setIsLoggedIn(true);
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem("userToken");
+    await AsyncStorage.removeItem("token");
     setIsLoggedIn(false);
   };
 
