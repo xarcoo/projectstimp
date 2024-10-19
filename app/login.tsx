@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   viewRow: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: 'center',
     paddingRight: 50,
     margin: 3
