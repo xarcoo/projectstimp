@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "@rneui/base";
 import { Component } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Animated, { SlideInDown, SlideInLeft, SlideInRight, SlideInUp } from "react-native-reanimated";
 
 export default class Highscore extends Component {
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     marginBottom: 20,
-    fontWeight: 'bold',
+    fontFamily: 'verdana',
   },
   card: {
     flexDirection: 'row',
@@ -92,5 +92,6 @@ const styles = StyleSheet.create({
   },
   score: {
     fontSize: 20,
+    fontFamily: 'verdana',
   },
 });

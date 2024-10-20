@@ -28,14 +28,14 @@ function Login () {
     
   return (
     <Card>
-      <Card.Title>Silakan Login</Card.Title>
+      <Card.Title style={{ fontFamily: 'verdana' }}>Silakan Login</Card.Title>
       <Card.Divider/>
       <View style={styles.viewRow}>
-        <Text>Username </Text>
+        <Text style={{ fontFamily: 'verdana' }}>Username </Text>
         <TextInput style={styles.input} onChangeText={(text) => setUsername(text)} value={username} />
       </View>
       <View style={styles.viewRow}>
-        <Text>Password </Text>
+        <Text style={{ fontFamily: 'verdana' }}>Password </Text>
         <TextInput secureTextEntry={true} style={styles.input} onChangeText={(text) => setPassword(text)} value={password} />
       </View>
       <View style={styles.viewRow}>
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     width: 200,
     borderWidth: 1,
     padding: 10,
+    fontFamily: 'verdana',
   },
   button: {
     height: 40,

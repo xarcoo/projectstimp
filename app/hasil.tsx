@@ -81,7 +81,7 @@ export default class Hasil extends Component {
           <Button 
             title="Main Menu" 
             onPress={() => router.replace('/screens')}
-            titleStyle={{ fontWeight: 'bold' }} 
+            titleStyle={{ fontWeight: 'bold', }} 
             buttonStyle={{ backgroundColor: 'rgba(111, 202, 186, 1)', borderRadius: 3, }} 
             containerStyle={styles.button}
           />
@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8f9fa",
   },
   congratulationsText: {
+    fontFamily: 'verdana',
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
     color: "#343a40",

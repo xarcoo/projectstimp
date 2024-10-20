@@ -173,7 +173,7 @@ const App: React.FC = () => {
     await setScoreLocal();
     console.log("NavigateLvl" + currentLevel);
     console.log("Navigate" + score);
-    router.replace({ pathname: '/hasil', params: { totalScore } });
+    router.replace({ pathname: '/hasil' });
     totalScore = 0
   };
 
@@ -216,14 +216,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
   },
   scoreText: {
+    fontFamily: 'verdana',
     fontSize: 24,
     marginBottom: 10,
   },
   levelText: {
+    fontFamily: 'verdana',
     fontSize: 24,
     marginBottom: 20,
   },
   timerText: {
+    fontFamily: 'verdana',
     fontSize: 18,
     marginBottom: 10,
   },
