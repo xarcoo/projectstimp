@@ -18,7 +18,6 @@ export default class Hasil extends Component {
       const score = await AsyncStorage.getItem('score');
       const username = await AsyncStorage.getItem('username');
       this.setState({ username: username || '', score: score ? Number(score) : 0 });
-      console.log(this.state.score)
       this.setHighscore();
     } catch (e) {
       console.error('Error reading username and score from AsyncStorage', e);
