@@ -97,7 +97,7 @@ const App: React.FC = () => {
     if (currentLevel < levels.length) {
       const randomIndexes = generateRandomIndexes(levels[currentLevel].rows * levels[currentLevel].columns, 3 + currentLevel);
       setHighlightedKotak(randomIndexes);
-      setTimeLeft(30);
+      setTimeLeft(3);
       setTimerStarted(false);
       setCanPress(false);
     }
@@ -110,9 +110,7 @@ const App: React.FC = () => {
     }
 
     if (timeLeft === 0) {
-      setGameOver(true);
-      setScoreLocal();
-      navigateToResults();
+      handleGameOver()
     }
   }, [timeLeft, timerStarted, gameOver]);
 

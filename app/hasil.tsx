@@ -4,6 +4,8 @@ import { router } from "expo-router";
 import { Component } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 
+
+
 export default class Hasil extends Component {
   state = {
     score: 0,
@@ -16,6 +18,7 @@ export default class Hasil extends Component {
       const score = await AsyncStorage.getItem('score');
       const username = await AsyncStorage.getItem('username');
       this.setState({ username: username || '', score: score ? Number(score) : 0 });
+      console.log(this.state.score)
       this.setHighscore();
     } catch (e) {
       console.error('Error reading username and score from AsyncStorage', e);
@@ -25,9 +28,11 @@ export default class Hasil extends Component {
 
   setHighscore = async () => {
     try {
+      const username = await AsyncStorage.getItem('username');
+      const score = await AsyncStorage.getItem('score');
       const highscore = await AsyncStorage.getItem('highscore');
       let scores = highscore ? JSON.parse(highscore) : [];
-      scores.push([this.state.username, this.state.score]);
+      scores.push([username, score]);
       scores.sort((a, b) => b[1] - a[1]);
       scores = scores.slice(0, 3);
       await AsyncStorage.setItem('highscore', JSON.stringify(scores));
